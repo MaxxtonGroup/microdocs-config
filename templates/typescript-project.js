@@ -1,6 +1,6 @@
 "use strict";
-var domain_1 = require("@maxxton/microdocs-core/domain");
-var schema_helper_1 = require("../../node_modules/@maxxton/microdocs-core/helpers/schema/schema.helper");
+var domain_1 = require("../../../dist/@maxxton/microdocs-core/domain");
+var schema_helper_1 = require("../../../dist/node_modules/@maxxton/microdocs-core/helpers/schema/schema.helper");
 function default_1(env, projects, projectNodes, projectNodesFlat, current, currentNode) {
     var className = snakeToCamel(current.info.title);
     className = className.substring(0, 1).toUpperCase() + className.substring(1);
@@ -13,11 +13,15 @@ function default_1(env, projects, projectNodes, projectNodesFlat, current, curre
                 var endpoint = current.paths[path][method];
                 var endpointContent = '';
                 var descParams = endpoint.parameters ? endpoint.parameters.filter(function (param) { return param.description && param.description.trim(); }) : [];
-                if ((endpoint.description && endpoint.description.trim()) || descParams.length > 0) {
+                var returnResponse = endpoint.responses ? Object.keys(endpoint.responses).filter(function (key) { return endpoint.responses[key].description && endpoint.responses[key].description.trim(); })[0] : undefined;
+                if ((endpoint.description && endpoint.description.trim()) || descParams.length > 0 || returnResponse) {
                     endpointContent = "\n  /**\n   * " + (endpoint.description.replace(/\n/g, '\n   *') || '');
                     descParams.forEach(function (param) {
                         endpointContent += "\n   * @param " + param.name + " " + param.description;
                     });
+                    if (returnResponse) {
+                        endpointContent += "\n   * @return " + endpoint.responses[returnResponse].description;
+                    }
                     endpointContent += '\n   */';
                 }
                 var returnType = getReturnType(endpoint);
@@ -86,6 +90,9 @@ function default_1(env, projects, projectNodes, projectNodesFlat, current, curre
             }
             if (type === domain_1.SchemaTypes.DATE || type === domain_1.SchemaTypes.ENUM) {
                 type = domain_1.SchemaTypes.STRING;
+            }
+            if (type === domain_1.SchemaTypes.ARRAY) {
+                return 'any[]';
             }
             return type || 'any';
         }
