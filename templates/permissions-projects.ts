@@ -165,7 +165,9 @@ export default function ( env:string, projects:Project[], projectNodes:ProjectNo
     extension: 'yml',
     body: {
       maxxton: {
-        permissions: permissions
+        permissions: {
+          endpoints: permissions
+        }
       }
     }
   };

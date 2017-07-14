@@ -133,7 +133,9 @@ function default_1(env, projects, projectNodes, projectNodesFlat, current, curre
         extension: 'yml',
         body: {
             maxxton: {
-                permissions: permissions
+                permissions: {
+                    endpoints: permissions
+                }
             }
         }
     };
