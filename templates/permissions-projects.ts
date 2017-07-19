@@ -81,6 +81,7 @@ export default function ( env:string, projects:Project[], projectNodes:ProjectNo
 
     // Build the permission and return it along with the pathName
     let permissionEndpoint:any = {
+      service: project.info.title,
       uri: regexUri,
       methods: methods,
       executable: false,

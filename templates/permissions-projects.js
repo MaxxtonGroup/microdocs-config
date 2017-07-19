@@ -66,6 +66,7 @@ function default_1(env, projects, projectNodes, projectNodesFlat, current, curre
             }
         }
         var permissionEndpoint = {
+            service: project.info.title,
             uri: regexUri,
             methods: methods,
             executable: false,
